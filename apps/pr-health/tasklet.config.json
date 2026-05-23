@@ -1,0 +1,5 @@
+{
+  "name": "pr-health",
+  "displayName": "PR Health Dashboard",
+  "description": "Live dashboard showing PR age, staleness, Jules rebase status, and merge velocity across all repos"
+}
