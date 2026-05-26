@@ -5,39 +5,72 @@ Monorepo for Tasklet automation tooling — keeping GitHub repos clean and PRs h
 ## Structure
 
 ```
-├── apps/pr-health/      # PR Health Dashboard (Tasklet instant app)
-├── workflows/           # GitHub Actions workflows
-│   ├── stale-pr-rebase.yml   # Auto-rebase stale PRs via Jules
-│   └── rebase_stale_prs.py   # Python script for staleness detection
-└── subagents/           # Tasklet subagent instruction files
-    ├── jules-rebase-stale-prs.md
-    ├── build-pr-dashboard.md
-    ├── delete-jules-sessions.md
-    └── post-jules-update-comments.md
+tasklet-automations/
+├── .agents/                        # AI agent instructions
+│   └── tasklet/                    # Tasklet subagent definitions
+│       ├── jules-rebase-stale-prs.md
+│       ├── build-pr-dashboard.md
+│       ├── delete-jules-sessions.md
+│       ├── post-jules-update-comments.md
+│       └── sync-repo.md
+├── .github/
+│   ├── workflows/
+│   │   └── stale-pr-rebase.yml     # Weekly CI: detect & rebase stale PRs
+│   └── scripts/
+│       └── rebase_stale_prs.py     # Staleness detection + Jules integration
+├── apps/
+│   └── pr-health/                  # PR Health Dashboard (Tasklet instant app)
+│       ├── app.tsx                 # Main application
+│       ├── types.ts                # TypeScript types
+│       ├── styles.css              # Custom animations
+│       └── utils/helpers.ts        # Utility functions
+├── packages/                       # Shared code (future)
+├── package.json                    # Root workspace config
+├── pnpm-workspace.yaml             # pnpm workspace definition
+├── .editorconfig
+└── .gitignore
 ```
 
-## PR Health Dashboard
+## Apps
 
-A session-focused mission control dashboard for monitoring the Jules rebase pipeline. Tracks active sessions, queued PRs, and resolution history across multiple repos.
+### PR Health Dashboard (`apps/pr-health`)
 
-**Features:**
-- Live PR data from GitHub API
-- Jules pipeline status (scan → queue → activate → monitor → resolve)
-- Agent-integrated actions (run scans, activate PRs, check status, re-ping Jules)
-- Activity log with full audit trail
+Session-focused mission control for monitoring the Jules rebase pipeline.
 
-## Jules Rebase Pipeline
-
-Automated sequential pipeline that:
-1. Scans repos for stale PRs (behind `main`)
-2. Queues them by priority
-3. Activates one at a time, posting `@jules` comments
-4. Monitors for resolution (merged/closed/failed)
-5. Moves to the next PR in the queue
+- **Live PR data** from GitHub API — no stale cache
+- **Jules pipeline stepper** — scan → queue → activate → monitor → resolve
+- **Agent-integrated actions** — run scans, activate PRs, check status, re-ping Jules
+- **Activity log** with full audit trail
+- **Queue management** — prioritize, resolve, fail items directly from UI
 
 ## Workflows
 
-GitHub Actions workflow + Python script for CI-based stale PR detection and auto-rebase via Jules.
+### Stale PR Rebase (`.github/workflows/stale-pr-rebase.yml`)
+
+GitHub Actions workflow that runs weekly to:
+1. Detect PRs behind the default branch (anchored SHA comparison)
+2. Create Jules sessions or post `@jules` comments to trigger rebases
+3. Supports dry-run mode and manual dispatch
+
+## Agents
+
+Tasklet subagent instructions in `.agents/tasklet/` power the automated pipeline:
+
+| Agent | What it does |
+|-------|-------------|
+| **jules-rebase-stale-prs** | Core pipeline — scan repos, queue stale PRs, ping Jules sequentially |
+| **build-pr-dashboard** | Rebuild the dashboard instant app |
+| **delete-jules-sessions** | Bulk-delete Jules API sessions |
+| **post-jules-update-comments** | Post `@jules` rebase comments on PRs |
+| **sync-repo** | Bidirectional sync between Tasklet and this repo |
+
+## Development
+
+```bash
+pnpm install
+pnpm format:check
+pnpm lint
+```
 
 ---
 
