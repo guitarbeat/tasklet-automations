@@ -13,10 +13,18 @@ interface RunCommandResult {
   readonly exitCode: number;
 }
 
+interface InvokeToolArgs {
+  readonly toolName: string;
+  readonly connectionId?: string;
+  readonly args: unknown;
+}
+
 interface TaskletApi {
   /** Send a chat message to the agent. Fire-and-forget — resolves when queued. */
   readonly sendMessageToAgent: (message: string) => Promise<{ readonly status: string } | null>;
-  /** Call a host tool by name. Response is auto-parsed (see runTool normalization docs). */
+  /** Invoke a tool. Pass connectionId for connection tools, omit for system tools. Response is auto-parsed (see invokeTool normalization docs). */
+  readonly invokeTool: (args: InvokeToolArgs) => Promise<unknown>;
+  /** @deprecated Use invokeTool({ toolName, connectionId?, args }) instead. */
   readonly runTool: (toolName: string, args: unknown) => Promise<unknown>;
   /** Read a text file from disk. Returns raw string content. For directories, returns ls listing. */
   readonly readFileFromDisk: (filePath: string) => Promise<string>;
