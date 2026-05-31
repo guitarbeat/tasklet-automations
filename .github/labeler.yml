@@ -1,0 +1,16 @@
+app:pr-health:
+  - changed-files:
+      - any-glob-to-any-file: "apps/pr-health/**"
+agents:
+  - changed-files:
+      - any-glob-to-any-file: ".agents/**"
+ci-cd:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**"
+docs:
+  - changed-files:
+      - any-glob-to-any-file: "**/*.md"
+workflows:
+  - changed-files:
+      - any-glob-to-any-file: ".github/workflows/**"
+      - any-glob-to-any-file: ".github/scripts/**"

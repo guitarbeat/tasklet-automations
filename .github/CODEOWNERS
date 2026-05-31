@@ -1,0 +1,12 @@
+# Default ownership
+* @guitarbeat
+
+# Apps
+/apps/ @guitarbeat
+
+# Agents & automation
+/.agents/ @guitarbeat
+/.github/ @guitarbeat
+
+# Packages
+/packages/ @guitarbeat

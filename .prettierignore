@@ -1,0 +1,8 @@
+node_modules/
+dist/
+build/
+bundle.js
+bundle.css
+pnpm-lock.yaml
+*.tsbuildinfo
+.tasklet-build-cache.json
