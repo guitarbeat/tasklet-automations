@@ -1,21 +1,10 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es2020",
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "baseUrl": ".",
     "jsx": "react-jsx",
-    "noEmit": true,
     "strict": false,
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": [
-        "/tmp/tasklet-deps/pr-health-7309f9667808/node_modules/*"
-      ]
-    },
-    "typeRoots": [
-      "/tmp/tasklet-deps/pr-health-7309f9667808/node_modules/@types"
-    ],
     "types": [
       "react",
       "react-dom"

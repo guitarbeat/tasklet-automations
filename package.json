@@ -1,8 +1,26 @@
 {
   "name": "tasklet-automations",
+  "version": "0.1.0",
   "private": true,
-  "description": "Monorepo for Tasklet automation tooling — PR health dashboard, Jules rebase pipeline, and GitHub Actions workflows",
-  "workspaces": ["apps/*", "packages/*"],
+  "description": "Monorepo for Tasklet automation tooling \u2014 PR health dashboard, Jules rebase pipeline, and GitHub Actions workflows",
+  "author": "Aaron L Woods <2@alw.lol>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guitarbeat/tasklet-automations.git"
+  },
+  "keywords": [
+    "tasklet",
+    "automation",
+    "github",
+    "pr-health",
+    "jules",
+    "monorepo"
+  ],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "lint": "tsc --noEmit",
     "format": "prettier --write '**/*.{ts,tsx,json,md,css}'",
@@ -13,6 +31,8 @@
     "typescript": "^5.0.0"
   },
   "engines": {
-    "node": ">=20"
-  }
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@9.15.0"
 }
