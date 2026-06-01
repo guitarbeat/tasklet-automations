@@ -80,7 +80,7 @@ const App: React.FC = () => {
             totalClosed={data.totalClosed}
           />
         ) : tab === 'repos' ? (
-          <RepoGrid repos={data.repos} />
+          <RepoGrid repos={data.repos} prCounts={data.prCounts} />
         ) : (
           <ActivityFeed actions={data.actions} sessions={data.sessions} />
         )}

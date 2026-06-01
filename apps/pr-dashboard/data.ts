@@ -8,6 +8,7 @@ export interface DashboardData {
   triggerRuns: TriggerRun[];
   totalMerged: number;
   totalClosed: number;
+  prCounts: Record<string, number>;
   generatedAt: string | null;
 }
 
@@ -1789,5 +1790,6 @@ export const dashboardData: DashboardData = {
   ],
   "totalMerged": 40,
   "totalClosed": 181,
+  "prCounts": {"cooperative-apps": 0, "bledsoe-mobile-notary": 1, "zine-ify": 27, "electron": 1, "Naming-Nosferatu": 0, "actual-mcp": 1},
   "generatedAt": "2026-05-24T22:27:12.640468Z"
 };
