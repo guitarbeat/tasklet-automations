@@ -1,12 +1,17 @@
-# Default ownership
+# Default
 * @guitarbeat
 
-# Apps
-/apps/ @guitarbeat
+# Dashboard
+apps/pr-health/ @guitarbeat
 
-# Agents & automation
-/.agents/ @guitarbeat
-/.github/ @guitarbeat
+# Workflows & CI
+.github/workflows/ @guitarbeat
+.github/scripts/ @guitarbeat
 
-# Packages
-/packages/ @guitarbeat
+# Agent instructions
+.agents/ @guitarbeat
+
+# Root configs
+package.json @guitarbeat
+tsconfig.json @guitarbeat
+pnpm-workspace.yaml @guitarbeat

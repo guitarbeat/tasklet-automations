@@ -1,0 +1,29 @@
+name: Stale Triage
+
+on:
+  schedule:
+    - cron: "30 15 * * 1"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-message: "This issue has had no activity for 45 days and was marked stale. Reply to keep it open."
+          stale-pr-message: "This PR has had no activity for 30 days and was marked stale. Update it to keep it open."
+          close-issue-message: "Closing stale issue due to inactivity. Reopen if still relevant."
+          close-pr-message: "Closing stale PR due to inactivity. Reopen when ready to continue."
+          days-before-issue-stale: 45
+          days-before-issue-close: 14
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
+          stale-issue-label: "status/stale"
+          stale-pr-label: "status/stale"
+          exempt-issue-labels: "p0,security,planned"
+          exempt-pr-labels: "work-in-progress,do-not-close"

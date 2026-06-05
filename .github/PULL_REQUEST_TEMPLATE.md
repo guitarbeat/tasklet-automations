@@ -1,32 +1,24 @@
 ## Summary
 
-- What changed and why (2–5 bullets)
+<!-- What does this PR do and why? -->
 
-## Scope
+## Changes
 
-- [ ] App (pr-health dashboard)
-- [ ] Workflow / CI
-- [ ] Agent instructions
-- [ ] Tooling / config
-- [ ] Documentation only
+<!-- List the key changes. Use bullet points. -->
 
-## Risk Level
+-
 
-- [ ] Low (refactor / docs / config)
-- [ ] Medium (feature / logic change)
-- [ ] High (automation / pipeline behavior)
+## Testing
 
-## Validation
+<!-- How was this tested? -->
 
-- [ ] `pnpm lint` passes
-- [ ] `pnpm format:check` passes
-- [ ] Manually tested (describe below)
+- [ ] Ran locally / in Tasklet sandbox
+- [ ] Verified in PR Health Dashboard
+- [ ] N/A (docs only)
 
-## Manual QA
+## Checklist
 
-- Steps to verify:
-
-## Related
-
-- Issue / task:
-- Follow-up work:
+- [ ] Commits follow [Conventional Commits](https://www.conventionalcommits.org/)
+- [ ] Type checks pass (`pnpm lint`)
+- [ ] Code is formatted (`pnpm format:check`)
+- [ ] README / docs updated if needed

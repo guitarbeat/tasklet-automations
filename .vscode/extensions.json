@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "ms-python.python",
+    "redhat.vscode-yaml",
+    "github.vscode-github-actions"
+  ]
+}

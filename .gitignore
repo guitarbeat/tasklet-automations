@@ -70,7 +70,6 @@ lerna-debug.log*
 
 # Editor directories
 .idea/
-.vscode/
 *.suo
 *.ntvs*
 *.njsproj
