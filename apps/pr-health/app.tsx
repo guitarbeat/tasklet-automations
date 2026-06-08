@@ -69,10 +69,15 @@ export default function App() {
   const [agentBusy, setAgentBusy] = useState(false);
   const [view, setView] = useState<'session' | 'overview'>('session');
   const [filter, setFilter] = useState<'all' | 'current' | 'stale' | 'dead'>('all');
+  const [confirmDialog, setConfirmDialog] = useState<{ title: string; msg: string; onConfirm: () => void } | null>(null);
 
   const showToast = (msg: string, type: 'success' | 'error' | 'info' = 'success') => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 4000);
+  };
+
+  const ask = (title: string, msg: string, onConfirm: () => void) => {
+    setConfirmDialog({ title, msg, onConfirm });
   };
 
   /* ─── Agent actions ────────────────────────────────────────── */
@@ -184,11 +189,17 @@ export default function App() {
     await reloadQueue();
   });
 
-  const removeFromQueue = (item: QueueItem) => withAction(`rm-${item.id}`, async () => {
-    await api.sqlExec(`DELETE FROM jules_queue WHERE id = ${item.id}`);
-    showToast(`#${item.pr_number} removed`);
-    await reloadQueue();
-  });
+  const removeFromQueue = (item: QueueItem) => {
+    ask(
+      'Remove from queue?',
+      `Remove PR #${item.pr_number} from ${item.repo}? This action cannot be undone.`,
+      () => withAction(`rm-${item.id}`, async () => {
+        await api.sqlExec(`DELETE FROM jules_queue WHERE id = ${item.id}`);
+        showToast(`#${item.pr_number} removed`);
+        await reloadQueue();
+      })
+    );
+  };
 
   const resolvePR = (item: QueueItem, resolution: string) => withAction(`res-${item.id}`, async () => {
     await api.sqlExec(`UPDATE jules_queue SET state = 'resolved', resolution = '${resolution}', resolved_at = datetime('now'), updated_at = datetime('now') WHERE id = ${item.id}`);
@@ -316,15 +327,48 @@ export default function App() {
 
       {/* ─ Toast ─ */}
       {toast && (
-        <div className={`toast-enter fixed top-3 right-3 z-50 flex items-center gap-2 px-4 py-2.5 rounded-lg shadow-lg text-sm font-medium ${
-          toast.type === 'success' ? 'bg-success text-success-content' :
-          toast.type === 'info'    ? 'bg-info text-info-content' :
-                                     'bg-error text-error-content'
-        }`}>
+        <div 
+          role="alert"
+          aria-live="polite"
+          aria-atomic="true"
+          className={`toast-enter fixed top-3 right-3 z-50 flex items-center gap-2 px-4 py-2.5 rounded-lg shadow-lg text-sm font-medium ${
+            toast.type === 'success' ? 'bg-success text-success-content' :
+            toast.type === 'info'    ? 'bg-info text-info-content' :
+                                       'bg-error text-error-content'
+          }`}>
           {toast.type === 'success' ? <CheckCircle size={14} /> :
            toast.type === 'info'    ? <Activity size={14} /> :
                                       <AlertTriangle size={14} />}
           {toast.msg}
+        </div>
+      )}
+
+      {/* ─ Confirmation Dialog ─ */}
+      {confirmDialog && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-base-100 rounded-xl shadow-xl max-w-sm w-full animate-fade-in">
+            <div className="px-6 py-4 border-b border-base-200">
+              <h2 className="text-base font-bold">{confirmDialog.title}</h2>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-sm text-base-content/70">{confirmDialog.msg}</p>
+            </div>
+            <div className="px-6 py-3 border-t border-base-200 flex gap-2 justify-end">
+              <button 
+                className="btn btn-sm btn-ghost"
+                onClick={() => setConfirmDialog(null)}>
+                Cancel
+              </button>
+              <button 
+                className="btn btn-sm btn-error"
+                onClick={() => {
+                  confirmDialog.onConfirm();
+                  setConfirmDialog(null);
+                }}>
+                Confirm
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -354,7 +398,11 @@ export default function App() {
               {agentBusy ? <span className="loading loading-spinner loading-xs" /> : <Radar size={14} />}
               Scan
             </button>
-            <button className="btn btn-sm btn-ghost btn-square rounded-lg" onClick={load} title="Refresh data">
+            <button 
+              className="btn btn-sm btn-ghost btn-square rounded-lg" 
+              onClick={load} 
+              title="Refresh data"
+              aria-label="Refresh data">
               <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             </button>
           </div>
@@ -512,12 +560,20 @@ export default function App() {
                           </div>
                         </div>
                         <div className="flex items-center gap-0.5 shrink-0">
-                          <button className="btn btn-xs btn-ghost btn-square opacity-40 hover:opacity-100"
-                            onClick={() => changePriority(q, 1)} disabled={q.priority >= 3} title="Priority up">
+                          <button 
+                            className="btn btn-xs btn-ghost btn-square opacity-40 hover:opacity-100"
+                            onClick={() => changePriority(q, 1)} 
+                            disabled={q.priority >= 3} 
+                            title="Priority up"
+                            aria-label="Increase priority">
                             <ChevronUp size={14} />
                           </button>
-                          <button className="btn btn-xs btn-ghost btn-square opacity-40 hover:opacity-100"
-                            onClick={() => changePriority(q, -1)} disabled={q.priority <= 0} title="Priority down">
+                          <button 
+                            className="btn btn-xs btn-ghost btn-square opacity-40 hover:opacity-100"
+                            onClick={() => changePriority(q, -1)} 
+                            disabled={q.priority <= 0} 
+                            title="Priority down"
+                            aria-label="Decrease priority">
                             <ChevronDown size={14} />
                           </button>
                           {canActivate && (
@@ -528,8 +584,11 @@ export default function App() {
                               Activate
                             </button>
                           )}
-                          <button className="btn btn-xs btn-ghost btn-square opacity-20 hover:opacity-100 hover:text-error"
-                            onClick={() => removeFromQueue(q)} title="Remove">
+                          <button 
+                            className="btn btn-xs btn-ghost btn-square opacity-20 hover:opacity-100 hover:text-error"
+                            onClick={() => removeFromQueue(q)} 
+                            title="Remove from queue"
+                            aria-label="Remove from queue">
                             <X size={13} />
                           </button>
                         </div>
@@ -671,11 +730,17 @@ export default function App() {
                   return (
                     <div key={`${pr.repo}-${pr.number}`}
                       className="flex items-center gap-2.5 px-3 py-2 text-sm hover:bg-base-200/30 transition-colors">
-                      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                        s === 'current' ? 'bg-success' : isDead ? 'bg-error' : 'bg-warning'
-                      }`} />
+                      <div className="flex items-center gap-1 shrink-0">
+                        <span className={`w-1.5 h-1.5 rounded-full ${
+                          s === 'current' ? 'bg-success' : isDead ? 'bg-error' : 'bg-warning'
+                        }`} />
+                        <span className="text-[10px] text-base-content/40 font-medium uppercase tracking-wide">
+                          {s === 'current' ? 'current' : isDead ? 'dead' : 'stale'}
+                        </span>
+                      </div>
                       <span>{agent.emoji}</span>
                       <a href={pr.url} target="_blank" rel="noopener"
+                        title={pr.title}
                         className="flex-1 min-w-0 hover:underline truncate leading-tight">
                         <span className="font-mono text-[11px] text-base-content/25">#{pr.number}</span>
                         {' '}<span className="text-base-content/80">{pr.title}</span>
@@ -836,10 +901,20 @@ const ActiveSessionCard: React.FC<{
               <button className="btn btn-sm btn-success gap-1 rounded-lg" onClick={() => setResolveOpen(true)} disabled={busy}>
                 <CheckCircle size={13} /> Resolve
               </button>
-              <button className="btn btn-sm btn-ghost rounded-lg opacity-50 hover:opacity-100" onClick={() => onSkip(item)} disabled={busy} title="Skip">
+              <button 
+                className="btn btn-sm btn-ghost rounded-lg opacity-50 hover:opacity-100" 
+                onClick={() => onSkip(item)} 
+                disabled={busy} 
+                title="Skip this PR"
+                aria-label="Skip this PR">
                 <SkipForward size={13} />
               </button>
-              <button className="btn btn-sm btn-ghost rounded-lg opacity-50 hover:opacity-100" onClick={() => onFail(item)} disabled={busy} title="Mark failed">
+              <button 
+                className="btn btn-sm btn-ghost rounded-lg opacity-50 hover:opacity-100" 
+                onClick={() => onFail(item)} 
+                disabled={busy} 
+                title="Mark as failed"
+                aria-label="Mark as failed">
                 <XCircle size={13} />
               </button>
             </div>
