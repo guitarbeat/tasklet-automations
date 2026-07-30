@@ -5,9 +5,14 @@ on:
     - cron: '0 14 * * 1'  # Every Monday at 9 AM CT (14:00 UTC)
   workflow_dispatch:        # Allow manual runs from GitHub UI
 
+concurrency:
+  group: stale-pr-rebase
+  cancel-in-progress: false
+
 jobs:
   rebase-stale-prs:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       pull-requests: write   # needed for fallback @jules comment
@@ -23,7 +28,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests==2.32.4
 
       - name: Rebase stale PRs
         env:
