@@ -88,4 +88,6 @@ venv/
 
 # Tasklet
 tasklet-env.d.ts
+!apps/pr-health/tasklet-env.d.ts
+!packages/mcp-client/src/tasklet-env.d.ts
 .tasklet-build-cache.json
