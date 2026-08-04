@@ -1,0 +1,5 @@
+{
+  "name": "mcp-dev-console",
+  "displayName": "MCP Dev Console",
+  "description": "Developer tool for testing and exploring MCP server tools — like Postman for MCP."
+}

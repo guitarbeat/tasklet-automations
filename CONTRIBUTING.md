@@ -4,13 +4,15 @@ Thanks for your interest! This guide covers the monorepo structure and developme
 
 ## Repository Layout
 
-| Path | What |
-|------|------|
-| `apps/pr-health/` | PR Health Dashboard (Tasklet instant app) |
-| `packages/` | Shared code and utilities |
-| `.agents/tasklet/` | Tasklet AI subagent instructions |
-| `.github/workflows/` | CI + automation workflows |
-| `.github/scripts/` | Supporting Python scripts |
+| Path                    | What                                        |
+| ----------------------- | ------------------------------------------- |
+| `apps/mcp-dev-console/` | MCP server explorer and schema auditor      |
+| `apps/pr-health/`       | PR Health Dashboard (Tasklet instant app)   |
+| `apps/pr-dashboard/`    | Historical PR automation reporting snapshot |
+| `packages/mcp-client/`  | Shared MCP HTTP/SSE client                  |
+| `.agents/tasklet/`      | Tasklet AI subagent instructions            |
+| `.github/workflows/`    | CI + automation workflows                   |
+| `.github/scripts/`      | Supporting Python scripts                   |
 
 ## Development Setup
 
@@ -22,15 +24,18 @@ pnpm install
 
 ## Where to Make Changes
 
-| Change | Location |
-|--------|----------|
-| Dashboard UI | `apps/pr-health/app.tsx` |
-| Dashboard types | `apps/pr-health/types.ts` |
-| Dashboard helpers | `apps/pr-health/utils/helpers.ts` |
-| Animations | `apps/pr-health/styles.css` |
-| Stale PR workflow | `.github/workflows/stale-pr-rebase.yml` |
-| Staleness detection | `.github/scripts/rebase_stale_prs.py` |
-| Agent instructions | `.agents/tasklet/*.md` |
+| Change               | Location                                |
+| -------------------- | --------------------------------------- |
+| MCP console UI       | `apps/mcp-dev-console/`                 |
+| MCP transport        | `packages/mcp-client/src/`              |
+| Dashboard UI         | `apps/pr-health/app.tsx`                |
+| Dashboard types      | `apps/pr-health/types.ts`               |
+| Dashboard helpers    | `apps/pr-health/utils/helpers.ts`       |
+| Animations           | `apps/pr-health/styles.css`             |
+| Historical dashboard | `apps/pr-dashboard/`                    |
+| Stale PR workflow    | `.github/workflows/stale-pr-rebase.yml` |
+| Staleness detection  | `.github/scripts/rebase_stale_prs.py`   |
+| Agent instructions   | `.agents/tasklet/*.md`                  |
 
 ## Code Quality
 
@@ -38,6 +43,7 @@ pnpm install
 pnpm format:check    # check formatting
 pnpm format          # auto-fix formatting
 pnpm lint            # type-check
+pnpm check           # run every required check
 ```
 
 ## Commit Convention
@@ -64,6 +70,6 @@ Scopes: `dashboard`, `workflow`, `agents`, `ci`, or omit for cross-cutting chang
 ## Architecture Notes
 
 - **Monorepo** — pnpm workspaces with `apps/*` + `packages/*`
-- **Tasklet runtime** — Dashboard is a Tasklet instant app (bundled at runtime, not locally)
+- **Tasklet runtime** — Apps are bundled by Tasklet at runtime, not locally
 - **Agent-integrated** — Dashboard buttons trigger Tasklet AI agent actions via `sendMessageToAgent`
 - **Sequential pipeline** — Jules interactions are one-at-a-time, tracked in `jules_queue` DB table

@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 ## [Unreleased]
 
 ### Added
+
+- Consolidated MCP Dev Console under `apps/mcp-dev-console`
+- Consolidated the historical Jules PR Dashboard under `apps/pr-dashboard`
+- Added the shared MCP client under `packages/mcp-client`
+- Linked the `tasklet-apps` default-branch history and recorded MCP import provenance
+- Removed an embedded MCP bearer token and restored the console's generated preset list
+- Added a consolidation record documenting overlaps, conflicts, and migration paths
+- Added missing Tasklet bridge declarations required for standalone app and package type checks
 - Monorepo structure with pnpm workspaces (`apps/*`, `packages/*`)
 - PR Health Dashboard (`apps/pr-health`) — session-focused mission control
 - Jules rebase pipeline — sequential stale PR detection and resolution
@@ -20,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - Bidirectional sync between Tasklet filesystem and GitHub repo
 
 ### Pipeline Evolutions
+
 1. ✅ Smarter staleness detection (anchored SHA comparison)
 2. ✅ Jules follow-up loop (re-ping persistent stale PRs)
 3. ✅ Auto-close dead PRs >90 days with advisory comments

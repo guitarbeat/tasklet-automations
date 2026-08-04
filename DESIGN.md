@@ -2,6 +2,18 @@
 
 Architecture, design decisions, and patterns for the tasklet-automations monorepo.
 
+## Monorepo Boundaries
+
+The repository has three independently deployable Tasklet apps:
+
+- `mcp-dev-console` explores and audits MCP servers and consumes `mcp-client`.
+- `pr-health` operates the live Jules stale-PR pipeline.
+- `pr-dashboard` renders a generated historical analytics snapshot.
+
+Apps do not import from one another. Runtime-specific code stays in each app, while
+reusable protocol code belongs in `packages/`. This keeps Tasklet deployment simple
+and prevents historical data from being mistaken for live pipeline state.
+
 ## System Architecture
 
 ```
@@ -111,12 +123,12 @@ PR Health Dashboard (app.tsx)
 
 ### Data Sources
 
-| Data | Source | Freshness |
-|------|--------|-----------|
-| Open PRs | GitHub API (`github_list_pull_requests`) | Live on load |
-| Queue state | SQLite (`jules_queue`) | Live on load |
-| Activity log | SQLite (`jules_activity_log`) | Live on load |
-| Pipeline step | Computed from queue + PR data | Derived |
+| Data          | Source                                   | Freshness    |
+| ------------- | ---------------------------------------- | ------------ |
+| Open PRs      | GitHub API (`github_list_pull_requests`) | Live on load |
+| Queue state   | SQLite (`jules_queue`)                   | Live on load |
+| Activity log  | SQLite (`jules_activity_log`)            | Live on load |
+| Pipeline step | Computed from queue + PR data            | Derived      |
 
 ### Agent Action Flow
 

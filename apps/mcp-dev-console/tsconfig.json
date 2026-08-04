@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "strict": false,
+    "types": ["react", "react-dom"]
+  },
+  "include": ["./**/*.tsx", "./**/*.ts", "./**/*.d.ts"],
+  "exclude": ["node_modules"]
+}

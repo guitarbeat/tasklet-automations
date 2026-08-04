@@ -2,7 +2,7 @@
   "name": "tasklet-automations",
   "version": "0.1.0",
   "private": true,
-  "description": "Monorepo for Tasklet automation tooling \u2014 PR health dashboard, Jules rebase pipeline, and GitHub Actions workflows",
+  "description": "Monorepo for Tasklet instant apps, MCP developer tools, and GitHub/Jules automation",
   "author": "Aaron L Woods <2@alw.lol>",
   "license": "MIT",
   "repository": {
@@ -14,6 +14,8 @@
     "automation",
     "github",
     "pr-health",
+    "mcp",
+    "developer-tools",
     "jules",
     "monorepo"
   ],
@@ -23,6 +25,7 @@
   ],
   "scripts": {
     "lint": "tsc --noEmit",
+    "check": "pnpm format:check && pnpm lint",
     "format": "prettier --write '**/*.{ts,tsx,json,md,css}'",
     "format:check": "prettier --check '**/*.{ts,tsx,json,md,css}'"
   },
