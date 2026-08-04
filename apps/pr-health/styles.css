@@ -1,41 +1,95 @@
 /* ─── Animations ─────────────────────────────────────── */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(-8px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 0 0 oklch(var(--in) / 0.15); }
-  50%      { box-shadow: 0 0 12px 2px oklch(var(--in) / 0.25); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 oklch(var(--in) / 0.15);
+  }
+  50% {
+    box-shadow: 0 0 12px 2px oklch(var(--in) / 0.25);
+  }
 }
 @keyframes pulseSubtle {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 @keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
-.animate-fade-in  { animation: fadeIn 0.3s ease-out both; }
-.animate-slide-in { animation: slideIn 0.3s ease-out both; }
-.animate-glow     { animation: glow 2.5s ease-in-out infinite; }
-.animate-pulse-soft { animation: pulseSubtle 2.5s ease-in-out infinite; }
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out both;
+}
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out both;
+}
+.animate-glow {
+  animation: glow 2.5s ease-in-out infinite;
+}
+.animate-pulse-soft {
+  animation: pulseSubtle 2.5s ease-in-out infinite;
+}
 
 /* Stagger children */
-.stagger > * { animation: fadeIn 0.3s ease-out both; }
-.stagger > *:nth-child(1)  { animation-delay: 0ms; }
-.stagger > *:nth-child(2)  { animation-delay: 60ms; }
-.stagger > *:nth-child(3)  { animation-delay: 120ms; }
-.stagger > *:nth-child(4)  { animation-delay: 180ms; }
-.stagger > *:nth-child(5)  { animation-delay: 240ms; }
-.stagger > *:nth-child(6)  { animation-delay: 300ms; }
-.stagger > *:nth-child(7)  { animation-delay: 360ms; }
-.stagger > *:nth-child(8)  { animation-delay: 420ms; }
-.stagger > *:nth-child(n+9){ animation-delay: 480ms; }
+.stagger > * {
+  animation: fadeIn 0.3s ease-out both;
+}
+.stagger > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 60ms;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 180ms;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 240ms;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 300ms;
+}
+.stagger > *:nth-child(7) {
+  animation-delay: 360ms;
+}
+.stagger > *:nth-child(8) {
+  animation-delay: 420ms;
+}
+.stagger > *:nth-child(n + 9) {
+  animation-delay: 480ms;
+}
 
 /* Step connector active animation */
 .step-active-line {
@@ -45,15 +99,26 @@
 }
 
 /* Queue item hover */
-.queue-item { transition: all 0.15s ease; }
-.queue-item:hover { transform: translateX(2px); }
+.queue-item {
+  transition: all 0.15s ease;
+}
+.queue-item:hover {
+  transform: translateX(2px);
+}
 
 /* Toast */
-.toast-enter { animation: slideIn 0.25s ease-out both; }
+.toast-enter {
+  animation: slideIn 0.25s ease-out both;
+}
 
 /* Card hover lift */
-.card-hover { transition: all 0.2s ease; }
-.card-hover:hover { transform: translateY(-1px); box-shadow: 0 4px 12px -2px oklch(0 0 0 / 0.08); }
+.card-hover {
+  transition: all 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -2px oklch(0 0 0 / 0.08);
+}
 
 /* Section titles */
 .section-title {
@@ -65,6 +130,13 @@
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: oklch(var(--bc) / 0.12); border-radius: 4px; }
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(var(--bc) / 0.12);
+  border-radius: 4px;
+}

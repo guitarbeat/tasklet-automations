@@ -21,6 +21,7 @@ toward resolution or picks the next one from the queue.
 ## Database Tables
 
 ### `jules_queue` — the focused work queue
+
 ```sql
 CREATE TABLE IF NOT EXISTS jules_queue (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,6 +42,7 @@ CREATE TABLE IF NOT EXISTS jules_queue (
 ```
 
 ### `jules_sessions` — legacy ping log (read-only, for dashboard history)
+
 Keep this for historical reference. Don't write new rows here.
 
 ---
@@ -63,6 +65,7 @@ Store the main HEAD SHA per repo in a local variable.
 ### Step 3: Check the Active PR
 
 Query for the currently active PR:
+
 ```sql
 SELECT * FROM jules_queue WHERE state = 'active' LIMIT 1
 ```
@@ -80,11 +83,13 @@ SELECT * FROM jules_queue WHERE state = 'active' LIMIT 1
    - **PR base SHA still different AND ping_count < 3** → re-ping Jules (see Step 5)
 
 3. **To resolve a PR:**
+
 ```sql
 UPDATE jules_queue
 SET state = ?, resolution = ?, resolved_at = datetime('now'), updated_at = datetime('now')
 WHERE id = ?
 ```
+
 Then proceed to Step 4 to pick the next PR.
 
 4. **To re-ping:** Go directly to Step 5 with this PR.
@@ -96,6 +101,7 @@ Then proceed to Step 4 to pick the next PR.
 First, refresh the queue — add any stale PRs not already tracked:
 
 For each open PR across both repos:
+
 - If its base SHA ≠ main HEAD SHA → it's stale
 - Check if it's already in `jules_queue` (any state)
 - If not → insert it with appropriate priority:
@@ -105,11 +111,13 @@ For each open PR across both repos:
   - Otherwise → priority 0
 
 Remove PRs from queue that are no longer stale (base SHA matches) and still in `queued` state:
+
 ```sql
 DELETE FROM jules_queue WHERE state = 'queued' AND pr_number = ? AND repo = ?
 ```
 
 Now pick the highest-priority queued PR:
+
 ```sql
 SELECT * FROM jules_queue
 WHERE state = 'queued'
@@ -120,6 +128,7 @@ LIMIT 1
 If no queued PRs → all caught up! Report that and stop.
 
 Mark it active:
+
 ```sql
 UPDATE jules_queue
 SET state = 'active', updated_at = datetime('now')
@@ -131,16 +140,19 @@ WHERE id = ?
 Post a comment on the active PR via `github_create_issue_comment`:
 
 **First ping (ping_count = 0):**
+
 ```
 @jules Please rebase this branch onto the latest `main` and resolve any conflicts. Thanks!
 ```
 
 **Re-ping (ping_count > 0):**
+
 ```
 @jules This branch is still behind `main`. Could you please try rebasing again? (Attempt PING_COUNT/3)
 ```
 
 Update the record:
+
 ```sql
 UPDATE jules_queue
 SET ping_count = ping_count + 1,
@@ -167,17 +179,22 @@ the GitHub PR state is the source of truth for resolution.
 After handling the active PR, do a quick scan for PRs with `updatedAt` > 90 days ago.
 
 For each dead PR not already in the queue with resolution `closed`:
+
 1. Post a comment:
+
 ```
 🧹 This PR has had no activity for 90+ days. If this work is still needed, please reopen and rebase onto `main`.
 ```
+
 2. Insert/update in queue:
+
 ```sql
 INSERT OR REPLACE INTO jules_queue (pr_number, repo, state, resolution, resolved_at, notes, updated_at)
 VALUES (?, ?, 'skipped', 'dead-90d', datetime('now'), 'Auto-close suggested', datetime('now'))
 ```
 
 Only do this ONCE per PR — check before commenting:
+
 ```sql
 SELECT id FROM jules_queue WHERE pr_number = ? AND repo = ? AND resolution = 'dead-90d'
 ```
@@ -185,6 +202,7 @@ SELECT id FROM jules_queue WHERE pr_number = ? AND repo = ? AND resolution = 'de
 ### Step 8: Report Results
 
 Return a summary:
+
 - **Active PR**: which PR is currently being worked, ping count, status
 - **Queue depth**: how many PRs remain queued by priority
 - **Resolved this run**: any PRs that got resolved and how
