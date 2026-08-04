@@ -1,0 +1,5 @@
+{
+  "name": "pr-dashboard",
+  "displayName": "Jules PR Portfolio",
+  "description": "Historical snapshot of Jules PR automation — repo health, merge stats, activity feed, and trigger runs."
+}

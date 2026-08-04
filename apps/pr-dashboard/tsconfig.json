@@ -1,11 +1,13 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
+    "noEmit": true,
     "strict": false,
     "skipLibCheck": true,
-    "types": ["react", "react-dom"]
+    "baseUrl": "."
   },
   "include": ["./**/*.tsx", "./**/*.ts", "./**/*.d.ts"],
   "exclude": ["node_modules"]

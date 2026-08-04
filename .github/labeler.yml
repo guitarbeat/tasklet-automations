@@ -1,6 +1,15 @@
 app:pr-health:
   - changed-files:
       - any-glob-to-any-file: "apps/pr-health/**"
+app:pr-dashboard:
+  - changed-files:
+      - any-glob-to-any-file: "apps/pr-dashboard/**"
+app:mcp-dev-console:
+  - changed-files:
+      - any-glob-to-any-file: "apps/mcp-dev-console/**"
+package:mcp-client:
+  - changed-files:
+      - any-glob-to-any-file: "packages/mcp-client/**"
 agents:
   - changed-files:
       - any-glob-to-any-file: ".agents/**"

@@ -23,9 +23,9 @@ export function detectAgent(title: string): AgentType {
 
 export const AGENT: Record<AgentType, { emoji: string; label: string }> = {
   sentinel: { emoji: '🛡️', label: 'Security' },
-  bolt:     { emoji: '⚡', label: 'Performance' },
-  palette:  { emoji: '🎨', label: 'Style' },
-  other:    { emoji: '📦', label: 'Other' },
+  bolt: { emoji: '⚡', label: 'Performance' },
+  palette: { emoji: '🎨', label: 'Style' },
+  other: { emoji: '📦', label: 'Other' },
 };
 
 export function staleness(pr: PullRequest, mainSha: string | undefined): Staleness {
@@ -36,9 +36,9 @@ export function staleness(pr: PullRequest, mainSha: string | undefined): Stalene
 }
 
 export function repoHealth(prs: PullRequest[], repo: string, mainSha: string): RepoHealth {
-  const rp = prs.filter(p => p.repo === repo);
-  const current = rp.filter(p => p.baseSha === mainSha).length;
-  const dead = rp.filter(p => p.baseSha !== mainSha && daysSince(p.updatedAt) > 90).length;
+  const rp = prs.filter((p) => p.repo === repo);
+  const current = rp.filter((p) => p.baseSha === mainSha).length;
+  const dead = rp.filter((p) => p.baseSha !== mainSha && daysSince(p.updatedAt) > 90).length;
   const staleCount = rp.length - current - dead;
   return {
     name: repo,
@@ -53,15 +53,15 @@ export function repoHealth(prs: PullRequest[], repo: string, mainSha: string): R
 export const PRIORITY: Record<string, number> = { sentinel: 3, bolt: 2, palette: 1, other: 0 };
 
 export const RESOLUTIONS = [
-  { key: 'merged',             label: 'Merged',       emoji: '🎉' },
-  { key: 'rebased',            label: 'Rebased',      emoji: '🔄' },
-  { key: 'closed',             label: 'Closed',       emoji: '🚪' },
-  { key: 'manually-resolved',  label: 'Manual fix',   emoji: '👤' },
-  { key: 'jules-failed',       label: 'Jules failed', emoji: '💔' },
-  { key: 'dead-90d',           label: 'Dead (90d)',   emoji: '💀' },
+  { key: 'merged', label: 'Merged', emoji: '🎉' },
+  { key: 'rebased', label: 'Rebased', emoji: '🔄' },
+  { key: 'closed', label: 'Closed', emoji: '🚪' },
+  { key: 'manually-resolved', label: 'Manual fix', emoji: '👤' },
+  { key: 'jules-failed', label: 'Jules failed', emoji: '💔' },
+  { key: 'dead-90d', label: 'Dead (90d)', emoji: '💀' },
 ] as const;
 
 export function resolutionInfo(key: string | null): { label: string; emoji: string } {
-  const found = RESOLUTIONS.find(r => r.key === key);
+  const found = RESOLUTIONS.find((r) => r.key === key);
   return found || { label: key || 'Unknown', emoji: '❓' };
 }

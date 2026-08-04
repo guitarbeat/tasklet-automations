@@ -1,0 +1,17 @@
+{
+  "name": "@tasklet-automations/mcp-dev-console",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tasklet instant app — MCP tool explorer UI",
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "lucide-react": "^0.523.0",
+    "@tasklet-automations/mcp-client": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  }
+}

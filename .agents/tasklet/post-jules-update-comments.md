@@ -15,8 +15,9 @@ Post a comment on every PR number in the payload. The comment should be:
 Post the comment to the owner/repo and issue_number specified in the payload.
 
 Work through ALL PRs in the list. For each one, call `conn_8et0d5bx3yszdanafpnb__github_create_issue_comment` with:
+
 - owner: from payload
-- repo: from payload  
+- repo: from payload
 - issue_number: the PR number
 - body: the comment text above
 
