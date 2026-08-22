@@ -9,9 +9,14 @@ permissions:
   issues: write
   pull-requests: write
 
+concurrency:
+  group: stale-triage
+  cancel-in-progress: false
+
 jobs:
   stale:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/stale@v9
         with:
