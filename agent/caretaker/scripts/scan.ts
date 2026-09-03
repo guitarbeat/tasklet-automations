@@ -134,7 +134,9 @@ const result = {
     stale: repos.reduce((n, r) => n + r.prs.filter((p) => p.classification !== 'fresh').length, 0),
     duplicateGroups: repos.reduce((n, r) => n + r.duplicates.length, 0),
   },
-  discrepancies: repos.filter((r) => !r.countVerified).map((r) => ({ repo: r.repo, ...r.countSources })),
+  discrepancies: repos
+    .filter((r) => !r.countVerified)
+    .map((r) => ({ repo: r.repo, ...r.countSources })),
 };
 
 mkdirSync(STATE_DIR, { recursive: true });
