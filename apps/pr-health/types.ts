@@ -1,6 +1,6 @@
 export type AgentType = 'sentinel' | 'bolt' | 'palette' | 'other';
 export type Staleness = 'current' | 'stale' | 'dead';
-export type QueueState = 'queued' | 'active' | 'resolved' | 'failed' | 'skipped' | 'archived';
+export type QueueState = 'queued' | 'active' | 'resolved' | 'failed' | 'skipped';
 export type Filter = 'all' | 'current' | 'stale' | 'dead';
 export type HealthGrade = 'A' | 'B' | 'C' | 'D' | 'F';
 export type ReviewStatus = 'APPROVED' | 'CHANGES_REQUESTED' | 'PENDING' | 'NO_REVIEWS';

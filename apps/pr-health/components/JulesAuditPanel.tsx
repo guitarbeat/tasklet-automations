@@ -1,25 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
-  ClipboardList,
-  RefreshCw,
-  Loader2,
-  ChevronDown,
-  ChevronRight,
-  AlertTriangle,
-  CheckCircle2,
-  GitBranch,
-  GitPullRequest,
-  Clock,
-  AlertOctagon,
-  Archive,
-  Hash,
+  ClipboardList, RefreshCw, Loader2, ChevronDown, ChevronRight,
+  AlertTriangle, CheckCircle2, GitBranch, GitPullRequest, Clock,
+  AlertOctagon, Archive, Hash,
 } from 'lucide-react';
-import type {
-  JulesAuditData,
-  JulesAuditStaleOutput,
-  JulesAuditMisconfiguredPR,
-  JulesAuditLingering,
-} from '../types';
+import type { JulesAuditData, JulesAuditStaleOutput, JulesAuditMisconfiguredPR, JulesAuditLingering } from '../types';
 import { formatAge } from '../utils/helpers';
 
 const AUDIT_FILE = '/tasklet/agent/home/apps/pr-health/jules-audit.json';
@@ -65,27 +50,9 @@ interface FindingCardMeta {
 }
 
 const FINDING_META: FindingCardMeta[] = [
-  {
-    key: 'stale_outputs',
-    label: 'Stale Outputs',
-    desc: 'Sessions whose diff no longer matches the branch head',
-    severity: 'warning',
-    icon: <GitBranch size={12} />,
-  },
-  {
-    key: 'misconfigured_active_prs',
-    label: 'Misconfigured Active PRs',
-    desc: 'Active sessions pointed at the wrong PR branch',
-    severity: 'error',
-    icon: <AlertOctagon size={12} />,
-  },
-  {
-    key: 'lingering_closed_or_merged',
-    label: 'Lingering Closed/Merged',
-    desc: 'Sessions left open after their PR was closed or merged',
-    severity: 'warning',
-    icon: <Archive size={12} />,
-  },
+  { key: 'stale_outputs', label: 'Stale Outputs', desc: 'Sessions whose diff no longer matches the branch head', severity: 'warning', icon: <GitBranch size={12} /> },
+  { key: 'misconfigured_active_prs', label: 'Misconfigured Active PRs', desc: 'Active sessions pointed at the wrong PR branch', severity: 'error', icon: <AlertOctagon size={12} /> },
+  { key: 'lingering_closed_or_merged', label: 'Lingering Closed/Merged', desc: 'Sessions left open after their PR was closed or merged', severity: 'warning', icon: <Archive size={12} /> },
 ];
 
 export const JulesAuditPanel: React.FC = () => {
@@ -131,7 +98,7 @@ export const JulesAuditPanel: React.FC = () => {
     }
   };
 
-  const toggle = (key: string) => setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+  const toggle = (key: string) => setExpanded(prev => ({ ...prev, [key]: !prev[key] }));
 
   const stateEntries: [string, number][] = data
     ? Object.keys(data.by_state)
@@ -152,10 +119,7 @@ export const JulesAuditPanel: React.FC = () => {
         </div>
         <div className="flex items-center gap-2">
           {data?.generated_at && (
-            <span
-              className="text-[9px] text-base-content/25 flex items-center gap-1 tabular-nums"
-              title={new Date(data.generated_at).toLocaleString()}
-            >
+            <span className="text-[9px] text-base-content/25 flex items-center gap-1 tabular-nums" title={new Date(data.generated_at).toLocaleString()}>
               <Clock size={8} />
               {formatAge(data.generated_at)} ago
             </span>
@@ -185,9 +149,7 @@ export const JulesAuditPanel: React.FC = () => {
       ) : !data ? (
         <div className="rounded-lg border border-dashed border-base-300 py-6 text-center">
           <p className="text-xs text-base-content/40 mb-1">No audit data yet</p>
-          <p className="text-[10px] text-base-content/25">
-            Run the audit to scan Jules sessions for cleanup issues.
-          </p>
+          <p className="text-[10px] text-base-content/25">Run the audit to scan Jules sessions for cleanup issues.</p>
         </div>
       ) : (
         <div className="space-y-2 animate-fade-in">
@@ -205,52 +167,28 @@ export const JulesAuditPanel: React.FC = () => {
 
           {/* Finding cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            {FINDING_META.map((meta) => {
+            {FINDING_META.map(meta => {
               const count = data.counts[meta.key] || 0;
               const items = data.findings[meta.key] || [];
               const healthy = count === 0;
               const isOpen = !!expanded[meta.key];
-              const ringColor = healthy
-                ? 'ring-success/15'
-                : meta.severity === 'error'
-                  ? 'ring-error/20'
-                  : 'ring-warning/20';
-              const bgColor = healthy
-                ? ''
-                : meta.severity === 'error'
-                  ? 'bg-error/5'
-                  : 'bg-warning/5';
-              const textColor = healthy
-                ? 'text-success'
-                : meta.severity === 'error'
-                  ? 'text-error'
-                  : 'text-warning';
+              const ringColor = healthy ? 'ring-success/15' : meta.severity === 'error' ? 'ring-error/20' : 'ring-warning/20';
+              const bgColor = healthy ? '' : meta.severity === 'error' ? 'bg-error/5' : 'bg-warning/5';
+              const textColor = healthy ? 'text-success' : meta.severity === 'error' ? 'text-error' : 'text-warning';
               return (
-                <div
-                  key={meta.key}
-                  className={`rounded-lg border border-base-200 p-2.5 ring-1 ${ringColor} ${bgColor} card-hover`}
-                >
+                <div key={meta.key} className={`rounded-lg border border-base-200 p-2.5 ring-1 ${ringColor} ${bgColor} card-hover`}>
                   <button
                     className="w-full flex items-center justify-between gap-1.5 text-left"
                     onClick={() => count > 0 && toggle(meta.key)}
                     disabled={count === 0}
                   >
                     <div className="flex items-center gap-1.5 min-w-0">
-                      <span className={textColor}>
-                        {healthy ? <CheckCircle2 size={12} /> : meta.icon}
-                      </span>
+                      <span className={textColor}>{healthy ? <CheckCircle2 size={12} /> : meta.icon}</span>
                       <span className="text-[11px] font-semibold truncate">{meta.label}</span>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
-                      <span className={`text-sm font-black tabular-nums ${textColor}`}>
-                        {count}
-                      </span>
-                      {count > 0 &&
-                        (isOpen ? (
-                          <ChevronDown size={12} className="opacity-40" />
-                        ) : (
-                          <ChevronRight size={12} className="opacity-40" />
-                        ))}
+                      <span className={`text-sm font-black tabular-nums ${textColor}`}>{count}</span>
+                      {count > 0 && (isOpen ? <ChevronDown size={12} className="opacity-40" /> : <ChevronRight size={12} className="opacity-40" />)}
                     </div>
                   </button>
                   <p className="text-[9px] text-base-content/30 mt-1 leading-tight">{meta.desc}</p>
@@ -258,47 +196,31 @@ export const JulesAuditPanel: React.FC = () => {
                   {isOpen && count > 0 && (
                     <div className="mt-2 -mx-1 max-h-56 overflow-y-auto custom-scrollbar space-y-1 animate-slide-up">
                       {items.map((item, i) => (
-                        <div
-                          key={`${item.id}-${i}`}
-                          className="pr-row bg-base-100/60 rounded-md px-1.5 py-1"
-                        >
+                        <div key={`${item.id}-${i}`} className="pr-row bg-base-100/60 rounded-md px-1.5 py-1">
                           <div className="flex items-center gap-1.5">
-                            <span className={`micro-badge ${stateBadgeClass(item.state)}`}>
-                              {item.state.toLowerCase()}
-                            </span>
-                            <span className="text-[9px] font-mono text-base-content/25 truncate">
-                              {item.repo.split('/')[1]}
-                            </span>
-                            <span className="text-[8px] font-mono text-base-content/15 ml-auto shrink-0">
-                              {shortId(item.id)}
-                            </span>
+                            <span className={`micro-badge ${stateBadgeClass(item.state)}`}>{item.state.toLowerCase()}</span>
+                            <span className="text-[9px] font-mono text-base-content/25 truncate">{item.repo.split('/')[1]}</span>
+                            <span className="text-[8px] font-mono text-base-content/15 ml-auto shrink-0">{shortId(item.id)}</span>
                           </div>
-                          <p
-                            className="text-[10px] text-base-content/60 leading-snug mt-0.5"
-                            title={item.title}
-                          >
+                          <p className="text-[10px] text-base-content/60 leading-snug mt-0.5" title={item.title}>
                             {truncate(item.title, 90)}
                           </p>
                           {meta.key === 'stale_outputs' && (
                             <div className="flex items-center gap-1 mt-1 text-[9px] text-base-content/25 font-mono">
                               <GitBranch size={9} className="opacity-50" />
-                              base {shortSha((item as JulesAuditStaleOutput).base)} → head{' '}
-                              {shortSha((item as JulesAuditStaleOutput).head)}
+                              base {shortSha((item as JulesAuditStaleOutput).base)} → head {shortSha((item as JulesAuditStaleOutput).head)}
                             </div>
                           )}
                           {meta.key === 'misconfigured_active_prs' && (
                             <div className="flex items-center gap-1 mt-1 text-[9px] text-base-content/25 font-mono">
                               <GitPullRequest size={9} className="opacity-50" />
-                              PR #{(item as JulesAuditMisconfiguredPR).pr} · session{' '}
-                              {(item as JulesAuditMisconfiguredPR).sessionBranch} ≠ pr{' '}
-                              {(item as JulesAuditMisconfiguredPR).prBranch}
+                              PR #{(item as JulesAuditMisconfiguredPR).pr} · session {(item as JulesAuditMisconfiguredPR).sessionBranch} ≠ pr {(item as JulesAuditMisconfiguredPR).prBranch}
                             </div>
                           )}
                           {meta.key === 'lingering_closed_or_merged' && (
                             <div className="flex items-center gap-1 mt-1 text-[9px] text-base-content/25 font-mono">
                               <Hash size={9} className="opacity-50" />
-                              PR #{(item as JulesAuditLingering).pr} ·{' '}
-                              {(item as JulesAuditLingering).merged ? 'merged' : 'closed'}
+                              PR #{(item as JulesAuditLingering).pr} · {(item as JulesAuditLingering).merged ? 'merged' : 'closed'}
                             </div>
                           )}
                         </div>
@@ -313,10 +235,7 @@ export const JulesAuditPanel: React.FC = () => {
           {data.errors && data.errors.length > 0 && (
             <div className="alert alert-warning py-1.5 px-2.5 text-[10px]">
               <AlertTriangle size={11} />
-              <span>
-                {data.errors.length} error{data.errors.length > 1 ? 's' : ''} occurred during the
-                last audit run.
-              </span>
+              <span>{data.errors.length} error{data.errors.length > 1 ? 's' : ''} occurred during the last audit run.</span>
             </div>
           )}
         </div>

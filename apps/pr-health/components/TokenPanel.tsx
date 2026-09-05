@@ -47,10 +47,7 @@ export const TokenPanel: React.FC<TokenPanelProps> = ({ status, onStatusChange, 
       return;
     }
     if (t.includes("'")) {
-      setPhase({
-        kind: 'error',
-        message: 'That does not look like a valid token (contains a quote).',
-      });
+      setPhase({ kind: 'error', message: 'That does not look like a valid token (contains a quote).' });
       return;
     }
     setPhase({ kind: 'testing' });
@@ -80,8 +77,7 @@ export const TokenPanel: React.FC<TokenPanelProps> = ({ status, onStatusChange, 
         } catch {
           /* keep default */
         }
-        if (code === '401')
-          msg = 'Token is invalid, expired, or revoked (401). Generate a fresh one.';
+        if (code === '401') msg = 'Token is invalid, expired, or revoked (401). Generate a fresh one.';
         setPhase({ kind: 'error', message: msg });
         return;
       }
@@ -174,12 +170,11 @@ export const TokenPanel: React.FC<TokenPanelProps> = ({ status, onStatusChange, 
               <div className="mt-1.5 text-[11px] text-base-content/60 leading-relaxed">
                 Authenticated as <span className="font-mono font-medium">{status.login}</span>
                 {status.last4 && (
-                  <>
-                    {' '}
-                    · ending <span className="font-mono">…{status.last4}</span>
-                  </>
+                  <> · ending <span className="font-mono">…{status.last4}</span></>
                 )}
-                {status.savedAt && <> · saved {new Date(status.savedAt).toLocaleDateString()}</>}
+                {status.savedAt && (
+                  <> · saved {new Date(status.savedAt).toLocaleDateString()}</>
+                )}
               </div>
               <div className="mt-1 text-[10px] text-base-content/40">
                 Merges and monorepo sync will use this token.
@@ -191,8 +186,8 @@ export const TokenPanel: React.FC<TokenPanelProps> = ({ status, onStatusChange, 
                 <ShieldAlert size={13} /> No merge token
               </div>
               <div className="mt-1 text-[11px] text-base-content/60 leading-relaxed">
-                Bot PRs get queued but can't be auto-merged, and the monorepo sync is blocked. Paste
-                a fine-grained PAT below to unblock both.
+                Bot PRs get queued but can't be auto-merged, and the monorepo sync is blocked.
+                Paste a fine-grained PAT below to unblock both.
               </div>
             </div>
           )}
@@ -279,11 +274,7 @@ export const TokenPanel: React.FC<TokenPanelProps> = ({ status, onStatusChange, 
             <button className="btn btn-xs btn-ghost" onClick={onClose} disabled={testing}>
               Cancel
             </button>
-            <button
-              className="btn btn-xs btn-primary gap-1"
-              onClick={testAndSave}
-              disabled={testing}
-            >
+            <button className="btn btn-xs btn-primary gap-1" onClick={testAndSave} disabled={testing}>
               {testing ? (
                 <>
                   <Loader2 size={12} className="animate-spin" /> Verifying…

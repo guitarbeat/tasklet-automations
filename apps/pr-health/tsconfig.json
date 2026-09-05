@@ -9,11 +9,24 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["/tmp/tasklet-deps/pr-health-7309f9667808/node_modules/*"]
+      "*": [
+        "/tmp/tasklet-deps/pr-health-7309f9667808/node_modules/*"
+      ]
     },
-    "typeRoots": ["/tmp/tasklet-deps/pr-health-7309f9667808/node_modules/@types"],
-    "types": ["react", "react-dom"]
+    "typeRoots": [
+      "/tmp/tasklet-deps/pr-health-7309f9667808/node_modules/@types"
+    ],
+    "types": [
+      "react",
+      "react-dom"
+    ]
   },
-  "include": ["./**/*.tsx", "./**/*.ts", "./**/*.d.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "./**/*.tsx",
+    "./**/*.ts",
+    "./**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -1,13 +1,4 @@
-import {
-  PullRequest,
-  AgentType,
-  RepoHealth,
-  Staleness,
-  HealthScore,
-  HealthGrade,
-  HealthFactor,
-  PRDetail,
-} from '../types';
+import { PullRequest, AgentType, RepoHealth, Staleness, HealthScore, HealthGrade, HealthFactor, PRDetail } from '../types';
 
 export function daysSince(dateStr: string): number {
   return Math.max(0, Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000));
@@ -32,9 +23,9 @@ export function detectAgent(title: string): AgentType {
 
 export const AGENT: Record<AgentType, { emoji: string; label: string }> = {
   sentinel: { emoji: '🛡️', label: 'Security' },
-  bolt: { emoji: '⚡', label: 'Performance' },
-  palette: { emoji: '🎨', label: 'Style' },
-  other: { emoji: '📦', label: 'Other' },
+  bolt:     { emoji: '⚡', label: 'Performance' },
+  palette:  { emoji: '🎨', label: 'Style' },
+  other:    { emoji: '📦', label: 'Other' },
 };
 
 export function staleness(pr: PullRequest, mainSha: string | undefined): Staleness {
@@ -45,9 +36,9 @@ export function staleness(pr: PullRequest, mainSha: string | undefined): Stalene
 }
 
 export function repoHealth(prs: PullRequest[], repo: string, mainSha: string): RepoHealth {
-  const rp = prs.filter((p) => p.repo === repo);
-  const current = rp.filter((p) => p.baseSha === mainSha).length;
-  const dead = rp.filter((p) => p.baseSha !== mainSha && daysSince(p.updatedAt) > 90).length;
+  const rp = prs.filter(p => p.repo === repo);
+  const current = rp.filter(p => p.baseSha === mainSha).length;
+  const dead = rp.filter(p => p.baseSha !== mainSha && daysSince(p.updatedAt) > 90).length;
   const staleCount = rp.length - current - dead;
   return {
     name: repo,
@@ -62,43 +53,31 @@ export function repoHealth(prs: PullRequest[], repo: string, mainSha: string): R
 export const PRIORITY: Record<string, number> = { sentinel: 3, bolt: 2, palette: 1, other: 0 };
 
 export const RESOLUTIONS = [
-  { key: 'merged', label: 'Merged', emoji: '🎉' },
-  { key: 'rebased', label: 'Rebased', emoji: '🔄' },
-  { key: 'closed', label: 'Closed', emoji: '🚪' },
-  { key: 'manually-resolved', label: 'Manual fix', emoji: '👤' },
-  { key: 'jules-failed', label: 'Jules failed', emoji: '💔' },
-  { key: 'dead-90d', label: 'Dead (90d)', emoji: '💀' },
+  { key: 'merged',             label: 'Merged',       emoji: '🎉' },
+  { key: 'rebased',            label: 'Rebased',      emoji: '🔄' },
+  { key: 'closed',             label: 'Closed',       emoji: '🚪' },
+  { key: 'manually-resolved',  label: 'Manual fix',   emoji: '👤' },
+  { key: 'jules-failed',       label: 'Jules failed', emoji: '💔' },
+  { key: 'dead-90d',           label: 'Dead (90d)',   emoji: '💀' },
 ] as const;
 
 export function resolutionInfo(key: string | null): { label: string; emoji: string } {
-  const found = RESOLUTIONS.find((r) => r.key === key);
+  const found = RESOLUTIONS.find(r => r.key === key);
   return found || { label: key || 'Unknown', emoji: '❓' };
 }
 
 /* ─── Health Score System ────────────────────────────────────── */
 
 const GRADE_THRESHOLDS: [number, HealthGrade][] = [
-  [85, 'A'],
-  [70, 'B'],
-  [55, 'C'],
-  [40, 'D'],
-  [0, 'F'],
+  [85, 'A'], [70, 'B'], [55, 'C'], [40, 'D'], [0, 'F'],
 ];
 
-export const GRADE_COLORS: Record<
-  HealthGrade,
-  { bg: string; text: string; ring: string; fill: string }
-> = {
-  A: { bg: 'bg-success/10', text: 'text-success', ring: 'ring-success/30', fill: 'bg-success' },
-  B: { bg: 'bg-info/10', text: 'text-info', ring: 'ring-info/30', fill: 'bg-info' },
-  C: { bg: 'bg-warning/10', text: 'text-warning', ring: 'ring-warning/30', fill: 'bg-warning' },
-  D: {
-    bg: 'bg-orange-500/10',
-    text: 'text-orange-400',
-    ring: 'ring-orange-400/30',
-    fill: 'bg-orange-400',
-  },
-  F: { bg: 'bg-error/10', text: 'text-error', ring: 'ring-error/30', fill: 'bg-error' },
+export const GRADE_COLORS: Record<HealthGrade, { bg: string; text: string; ring: string; fill: string }> = {
+  A: { bg: 'bg-success/10', text: 'text-success',   ring: 'ring-success/30', fill: 'bg-success' },
+  B: { bg: 'bg-info/10',    text: 'text-info',      ring: 'ring-info/30',    fill: 'bg-info' },
+  C: { bg: 'bg-warning/10', text: 'text-warning',   ring: 'ring-warning/30', fill: 'bg-warning' },
+  D: { bg: 'bg-orange-500/10', text: 'text-orange-400', ring: 'ring-orange-400/30', fill: 'bg-orange-400' },
+  F: { bg: 'bg-error/10',   text: 'text-error',     ring: 'ring-error/30',   fill: 'bg-error' },
 };
 
 export function computeHealthScore(pr: PullRequest, mainSha: string | undefined): HealthScore {
@@ -129,11 +108,7 @@ export function computeHealthScore(pr: PullRequest, mainSha: string | undefined)
     factors.push({ label: 'Stale base', impact: 'negative', detail: 'Needs rebase' });
   } else {
     score -= 25;
-    factors.push({
-      label: 'Dead',
-      impact: 'negative',
-      detail: 'Stale > 90 days, needs intervention',
-    });
+    factors.push({ label: 'Dead', impact: 'negative', detail: 'Stale > 90 days, needs intervention' });
   }
 
   // 3. Review status factor (up to -20 pts)
@@ -141,18 +116,10 @@ export function computeHealthScore(pr: PullRequest, mainSha: string | undefined)
     const rs = pr.detail.reviewStatus;
     if (rs === 'APPROVED') {
       score += 5; // bonus
-      factors.push({
-        label: 'Approved',
-        impact: 'positive',
-        detail: `By ${pr.detail.approvedBy.join(', ') || 'reviewer'}`,
-      });
+      factors.push({ label: 'Approved', impact: 'positive', detail: `By ${pr.detail.approvedBy.join(', ') || 'reviewer'}` });
     } else if (rs === 'CHANGES_REQUESTED') {
       score -= 20;
-      factors.push({
-        label: 'Changes requested',
-        impact: 'negative',
-        detail: `By ${pr.detail.changesRequestedBy.join(', ') || 'reviewer'}`,
-      });
+      factors.push({ label: 'Changes requested', impact: 'negative', detail: `By ${pr.detail.changesRequestedBy.join(', ') || 'reviewer'}` });
     } else if (rs === 'PENDING') {
       score -= 5;
       factors.push({ label: 'Review pending', impact: 'neutral', detail: 'Awaiting reviewer' });
@@ -164,32 +131,16 @@ export function computeHealthScore(pr: PullRequest, mainSha: string | undefined)
     // 4. Size factor (up to -15 pts)
     const totalChanges = pr.detail.additions + pr.detail.deletions;
     if (totalChanges <= 50) {
-      factors.push({
-        label: 'Small PR',
-        impact: 'positive',
-        detail: `${totalChanges} lines changed`,
-      });
+      factors.push({ label: 'Small PR', impact: 'positive', detail: `${totalChanges} lines changed` });
     } else if (totalChanges <= 200) {
       score -= 5;
-      factors.push({
-        label: 'Medium PR',
-        impact: 'neutral',
-        detail: `${totalChanges} lines changed`,
-      });
+      factors.push({ label: 'Medium PR', impact: 'neutral', detail: `${totalChanges} lines changed` });
     } else if (totalChanges <= 500) {
       score -= 10;
-      factors.push({
-        label: 'Large PR',
-        impact: 'negative',
-        detail: `${totalChanges} lines across ${pr.detail.changedFiles} files`,
-      });
+      factors.push({ label: 'Large PR', impact: 'negative', detail: `${totalChanges} lines across ${pr.detail.changedFiles} files` });
     } else {
       score -= 15;
-      factors.push({
-        label: 'Huge PR',
-        impact: 'negative',
-        detail: `${totalChanges} lines across ${pr.detail.changedFiles} files`,
-      });
+      factors.push({ label: 'Huge PR', impact: 'negative', detail: `${totalChanges} lines across ${pr.detail.changedFiles} files` });
     }
 
     // 5. Draft factor
@@ -204,11 +155,7 @@ export function computeHealthScore(pr: PullRequest, mainSha: string | undefined)
       factors.push({ label: 'Active', impact: 'positive', detail: 'Updated recently' });
     } else if (lastUpdate > 14) {
       score -= 5;
-      factors.push({
-        label: 'Inactive',
-        impact: 'negative',
-        detail: `No activity in ${lastUpdate}d`,
-      });
+      factors.push({ label: 'Inactive', impact: 'negative', detail: `No activity in ${lastUpdate}d` });
     }
   }
 
