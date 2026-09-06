@@ -19,6 +19,13 @@ import {
   resolutionInfo, RESOLUTIONS, PRIORITY, computeHealthScore, GRADE_COLORS,
   formatSize, sizeColor
 } from './utils/helpers';
+import {
+  runCaretakerPrompt,
+  activatePRPrompt,
+  checkStatusPrompt,
+  pingJulesPrompt,
+  autoClosePrompt,
+} from './utils/prompts';
 
 /* ─── Constants ─────────────────────────────────────────────── */
 const DEFAULT_REPOS = ['guitarbeat/bledsoe-mobile-notary', 'guitarbeat/PhD-Writing'];
@@ -125,23 +132,23 @@ export default function App() {
   };
 
   const agentRunCaretaker = () => askAgent(
-    'Run the repo-caretaker now (subagent file /tasklet/agent/home/subagents/repo-caretaker.md, pass it as contextFiles). Do the full weekly pass: scan PRs and issues across both repos, auto-merge routine bot PRs (ImgBot/Dependabot/github-actions) that are safe, do issue hygiene, sync the jules_queue, and act on the report. Show the PR Health dashboard when done and give me a short summary.',
+    runCaretakerPrompt(),
     'Running caretaker'
   );
   const agentActivatePR = (item: QueueItem) => askAgent(
-    `Activate PR #${item.pr_number} in ${item.repo} — update jules_queue to set it as active, then post a @jules rebase comment on the PR on GitHub. Log the action to jules_activity_log. Show the PR Health dashboard when done.`,
+    activatePRPrompt(item.repo, item.pr_number),
     `Activating #${item.pr_number}`
   );
   const agentCheckStatus = (item: QueueItem) => askAgent(
-    `Check the status of the active PR #${item.pr_number} in ${item.repo} — look at the PR on GitHub to see if it's been merged, rebased, or if Jules responded. Update jules_queue accordingly, log to jules_activity_log, and report back. Show the PR Health dashboard when done.`,
+    checkStatusPrompt(item.repo, item.pr_number),
     `Checking #${item.pr_number}`
   );
   const agentPingJules = (item: QueueItem) => askAgent(
-    `Re-ping Jules on the active PR #${item.pr_number} in ${item.repo} — post another @jules comment asking for a status update on the rebase. Update ping_count in jules_queue. Log to jules_activity_log. Show the PR Health dashboard when done.`,
+    pingJulesPrompt(item.repo, item.pr_number, item.ping_count),
     `Re-pinging Jules on #${item.pr_number}`
   );
   const agentAutoClose = (pr: PullRequest) => askAgent(
-    `PR #${pr.number} in ${pr.repo} has been dead for ${daysSince(pr.createdAt)} days. Post an advisory comment explaining it will be auto-closed due to inactivity, then close it. Update jules_queue if tracked. Log to jules_activity_log. Show the PR Health dashboard when done.`,
+    autoClosePrompt(pr.repo, pr.number, daysSince(pr.updatedAt)),
     `Auto-closing #${pr.number}`
   );
 
