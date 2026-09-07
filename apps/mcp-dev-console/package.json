@@ -10,8 +10,8 @@
     "@tasklet-automations/mcp-client": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
+    "typescript": "^7.0.2",
     "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0"
+    "@types/react-dom": "^19.2.7"
   }
 }
