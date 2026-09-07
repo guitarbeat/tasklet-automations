@@ -5,8 +5,16 @@ import { staleness, daysSince, formatSize } from '../utils/helpers';
 
 /* ─── Squarified treemap layout ─────────────────────────────── */
 
-interface Rect { x: number; y: number; w: number; h: number }
-export interface Tile<T> extends Rect { item: T; value: number }
+interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+export interface Tile<T> extends Rect {
+  item: T;
+  value: number;
+}
 
 function worst(row: number[], length: number, scale: number): number {
   const sum = row.reduce((a, b) => a + b, 0) * scale;
@@ -19,7 +27,7 @@ function worst(row: number[], length: number, scale: number): number {
 
 /** Squarified treemap (Bruls, Huizing & van Wijk). Values must be > 0. */
 function squarify<T>(items: { item: T; value: number }[], rect: Rect): Tile<T>[] {
-  const sorted = [...items].sort((a, b) => b.value - a.value).filter(d => d.value > 0);
+  const sorted = [...items].sort((a, b) => b.value - a.value).filter((d) => d.value > 0);
   if (!sorted.length) return [];
 
   const total = sorted.reduce((a, d) => a + d.value, 0);
@@ -82,7 +90,7 @@ type Metric = 'churn' | 'files' | 'age';
 const METRICS: { key: Metric; label: string; hint: string }[] = [
   { key: 'churn', label: 'Churn', hint: 'lines added + deleted' },
   { key: 'files', label: 'Files', hint: 'files changed' },
-  { key: 'age',   label: 'Age',   hint: 'days since opened' },
+  { key: 'age', label: 'Age', hint: 'days since opened' },
 ];
 
 function metricValue(pr: PullRequest, metric: Metric): number {
@@ -101,11 +109,27 @@ function metricLabel(pr: PullRequest, metric: Metric): string {
   return formatSize(d.additions, d.deletions);
 }
 
-const STALE_STYLE: Record<Staleness, { fill: string; border: string; dot: string; label: string }> = {
-  current: { fill: 'rgba(34,197,94,0.16)',  border: 'rgba(34,197,94,0.45)',  dot: 'bg-success', label: 'Up to date' },
-  stale:   { fill: 'rgba(245,158,11,0.18)', border: 'rgba(245,158,11,0.48)', dot: 'bg-warning', label: 'Stale' },
-  dead:    { fill: 'rgba(239,68,68,0.18)',  border: 'rgba(239,68,68,0.50)',  dot: 'bg-error',   label: 'Dead' },
-};
+const STALE_STYLE: Record<Staleness, { fill: string; border: string; dot: string; label: string }> =
+  {
+    current: {
+      fill: 'rgba(34,197,94,0.16)',
+      border: 'rgba(34,197,94,0.45)',
+      dot: 'bg-success',
+      label: 'Up to date',
+    },
+    stale: {
+      fill: 'rgba(245,158,11,0.18)',
+      border: 'rgba(245,158,11,0.48)',
+      dot: 'bg-warning',
+      label: 'Stale',
+    },
+    dead: {
+      fill: 'rgba(239,68,68,0.18)',
+      border: 'rgba(239,68,68,0.50)',
+      dot: 'bg-error',
+      label: 'Dead',
+    },
+  };
 
 /* ─── Component ─────────────────────────────────────────────── */
 
@@ -142,12 +166,12 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
 
   const layout = useMemo(() => {
     if (!groups.length) return [];
-    type Group = typeof groups[number];
+    type Group = (typeof groups)[number];
     const outer = squarify<Group>(
-      groups.map(g => ({ item: g, value: g.value })),
+      groups.map((g) => ({ item: g, value: g.value })),
       { x: 0, y: 0, w: W, h: H },
     );
-    return outer.map(cell => {
+    return outer.map((cell) => {
       const inner: Rect = {
         x: cell.x + GAP / 2,
         y: cell.y + GAP / 2 + GROUP_HEADER,
@@ -158,7 +182,7 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
         group: cell.item,
         rect: cell,
         tiles: squarify<PullRequest>(
-          cell.item.list.map(pr => ({ item: pr, value: metricValue(pr, metric) })),
+          cell.item.list.map((pr) => ({ item: pr, value: metricValue(pr, metric) })),
           inner,
         ),
       };
@@ -171,8 +195,8 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
     return counts;
   }, [prs, mainShas]);
 
-  const activeMetric = METRICS.find(m => m.key === metric)!;
-  const missingDetail = metric !== 'age' && prs.some(p => !p.detail);
+  const activeMetric = METRICS.find((m) => m.key === metric)!;
+  const missingDetail = metric !== 'age' && prs.some((p) => !p.detail);
 
   if (!prs.length) return null;
 
@@ -189,7 +213,7 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
           </span>
         </div>
         <div className="flex gap-1">
-          {METRICS.map(m => (
+          {METRICS.map((m) => (
             <button
               key={m.key}
               title={`Size tiles by ${m.hint}`}
@@ -219,7 +243,7 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
                 className="fill-base-content/40"
                 style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.02em' }}
               >
-                {rect.w > 150 ? group.repo : group.repo.split('/')[1] ?? group.repo}
+                {rect.w > 150 ? group.repo : (group.repo.split('/')[1] ?? group.repo)}
               </text>
               <text
                 x={rect.x + rect.w - 6}
@@ -256,9 +280,7 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
                       strokeWidth={hover?.pr === pr ? 1.6 : 1}
                       className={hover?.pr === pr ? 'text-base-content/50' : ''}
                     />
-                    {queued && (
-                      <circle cx={x + w - 9} cy={y + 9} r={2.6} className="fill-info" />
-                    )}
+                    {queued && <circle cx={x + w - 9} cy={y + 9} r={2.6} className="fill-info" />}
                     {showNum && (
                       <text
                         x={x + 7}
@@ -310,22 +332,33 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
             onMouseLeave={() => setHover(null)}
           >
             <div className="flex items-center gap-1.5 mb-1">
-              <span className={`w-1.5 h-1.5 rounded-full ${STALE_STYLE[staleness(hover.pr, mainShas[hover.pr.repo])].dot}`} />
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${STALE_STYLE[staleness(hover.pr, mainShas[hover.pr.repo])].dot}`}
+              />
               <span className="font-mono text-[10px] text-base-content/40">#{hover.pr.number}</span>
               <span className="text-[9px] text-base-content/25 truncate">{hover.pr.repo}</span>
             </div>
-            <div className="text-[11px] font-medium leading-snug mb-1.5 line-clamp-2">{hover.pr.title}</div>
+            <div className="text-[11px] font-medium leading-snug mb-1.5 line-clamp-2">
+              {hover.pr.title}
+            </div>
             <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-base-content/40 mb-2">
               <span>{hover.pr.author}</span>
               <span>{daysSince(hover.pr.createdAt)}d old</span>
-              {hover.pr.detail && <span>+{hover.pr.detail.additions} / −{hover.pr.detail.deletions}</span>}
+              {hover.pr.detail && (
+                <span>
+                  +{hover.pr.detail.additions} / −{hover.pr.detail.deletions}
+                </span>
+              )}
               {hover.pr.detail && <span>{hover.pr.detail.changedFiles} files</span>}
             </div>
             <div className="flex gap-1">
               <button
                 className="btn btn-xs rounded-lg h-6 min-h-0 text-[10px] flex-1 gap-1"
                 disabled={queuedKeys.has(`${hover.pr.repo}#${hover.pr.number}`)}
-                onClick={e => { e.stopPropagation(); onQueue(hover.pr); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onQueue(hover.pr);
+                }}
               >
                 <Inbox size={10} />
                 {queuedKeys.has(`${hover.pr.repo}#${hover.pr.number}`) ? 'Queued' : 'Queue'}
@@ -335,7 +368,7 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
                 href={hover.pr.url}
                 target="_blank"
                 rel="noopener"
-                onClick={e => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
               >
                 <ExternalLink size={10} />
                 Open
@@ -346,7 +379,7 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
 
         {/* Legend */}
         <div className="flex items-center gap-3 mt-1.5 px-1 text-[9px] text-base-content/25">
-          {(['current', 'stale', 'dead'] as Staleness[]).map(s => (
+          {(['current', 'stale', 'dead'] as Staleness[]).map((s) => (
             <span key={s} className="flex items-center gap-1">
               <span className={`w-1.5 h-1.5 rounded-full ${STALE_STYLE[s].dot}`} />
               {STALE_STYLE[s].label} <span className="tabular-nums opacity-60">{totals[s]}</span>
@@ -356,7 +389,9 @@ export function PRTreemap({ prs, mainShas, queuedKeys, onQueue }: Props) {
             <span className="w-1.5 h-1.5 rounded-full bg-info" /> queued
           </span>
           <span className="ml-auto">
-            {missingDetail ? 'some PRs lack size detail — shown at minimum area' : 'tile area = ' + activeMetric.hint}
+            {missingDetail
+              ? 'some PRs lack size detail — shown at minimum area'
+              : 'tile area = ' + activeMetric.hint}
           </span>
         </div>
       </div>

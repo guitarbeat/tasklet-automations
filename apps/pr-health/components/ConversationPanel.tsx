@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  MessageCircle, RefreshCw, Bot, User, ChevronDown, ChevronUp,
-  Clock, ExternalLink, Sparkles
+  MessageCircle,
+  RefreshCw,
+  Bot,
+  User,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  ExternalLink,
+  Sparkles,
 } from 'lucide-react';
 import { PRComment } from '../types';
 
@@ -20,9 +27,12 @@ function renderBody(body: string): React.ReactNode {
     if (line.startsWith('```')) {
       if (inCodeBlock) {
         elements.push(
-          <pre key={`code-${i}`} className="bg-base-300/50 rounded-lg p-3 text-xs font-mono overflow-x-auto my-2 whitespace-pre-wrap">
+          <pre
+            key={`code-${i}`}
+            className="bg-base-300/50 rounded-lg p-3 text-xs font-mono overflow-x-auto my-2 whitespace-pre-wrap"
+          >
             {codeLines.join('\n')}
-          </pre>
+          </pre>,
         );
         codeLines = [];
         inCodeBlock = false;
@@ -42,15 +52,22 @@ function renderBody(body: string): React.ReactNode {
     // Quote lines
     if (line.startsWith('> ')) {
       elements.push(
-        <div key={`q-${i}`} className="border-l-2 border-base-content/15 pl-3 my-1 text-base-content/45 italic text-[0.8125rem] leading-relaxed">
+        <div
+          key={`q-${i}`}
+          className="border-l-2 border-base-content/15 pl-3 my-1 text-base-content/45 italic text-[0.8125rem] leading-relaxed"
+        >
           {renderInline(line.slice(2))}
-        </div>
+        </div>,
       );
       continue;
     }
     // Headings
     if (line.startsWith('### ')) {
-      elements.push(<h4 key={`h-${i}`} className="font-bold text-sm mt-2 mb-1">{renderInline(line.slice(4))}</h4>);
+      elements.push(
+        <h4 key={`h-${i}`} className="font-bold text-sm mt-2 mb-1">
+          {renderInline(line.slice(4))}
+        </h4>,
+      );
       continue;
     }
     // Horizontal rules
@@ -60,7 +77,9 @@ function renderBody(body: string): React.ReactNode {
     }
     // Normal line
     elements.push(
-      <p key={`p-${i}`} className="text-[0.8125rem] leading-relaxed">{renderInline(line)}</p>
+      <p key={`p-${i}`} className="text-[0.8125rem] leading-relaxed">
+        {renderInline(line)}
+      </p>,
     );
   }
   return <>{elements}</>;
@@ -84,21 +103,31 @@ function renderInline(text: string): React.ReactNode {
       parts.push(
         <code key={ki++} className="bg-base-300/60 px-1.5 py-0.5 rounded text-xs font-mono">
           {match[3]}
-        </code>
+        </code>,
       );
     } else if (match[4] && match[5]) {
       parts.push(
-        <a key={ki++} href={match[5]} target="_blank" rel="noopener noreferrer"
-           className="text-info hover:underline">{match[4]}</a>
+        <a
+          key={ki++}
+          href={match[5]}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-info hover:underline"
+        >
+          {match[4]}
+        </a>,
       );
     } else if (match[6]) {
       const isJules = match[6].toLowerCase().includes('jules');
       parts.push(
-        <span key={ki++} className={`inline-flex items-center gap-0.5 font-semibold ${
-          isJules ? 'text-primary' : 'text-info'
-        }`}>
+        <span
+          key={ki++}
+          className={`inline-flex items-center gap-0.5 font-semibold ${
+            isJules ? 'text-primary' : 'text-info'
+          }`}
+        >
           {isJules && <Sparkles size={10} />}@{match[6]}
-        </span>
+        </span>,
       );
     }
     lastIndex = match.index + match[0].length;
@@ -121,7 +150,11 @@ function timeAgo(date: string): string {
 
 function formatTimestamp(date: string): string {
   return new Date(date).toLocaleString('en-US', {
-    month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
   });
 }
 
@@ -142,11 +175,13 @@ const MessageBubble: React.FC<{ comment: PRComment; isLast: boolean }> = ({ comm
 
   // Skip noisy bot messages (Qodo, Codex connector, etc)
   const body = comment.body || '';
-  if (isBot && body.length < 200 && (
-    body.includes('paused for this user') ||
-    body.includes('usage limits') ||
-    body.includes('reached your')
-  )) {
+  if (
+    isBot &&
+    body.length < 200 &&
+    (body.includes('paused for this user') ||
+      body.includes('usage limits') ||
+      body.includes('reached your'))
+  ) {
     return (
       <div className="flex items-center gap-2 py-1.5 px-2 opacity-40 text-xs">
         <Bot size={10} />
@@ -172,13 +207,17 @@ const MessageBubble: React.FC<{ comment: PRComment; isLast: boolean }> = ({ comm
   );
 
   return (
-    <div className={`flex gap-2.5 py-2.5 ${isLast ? '' : 'border-b border-base-200/30'} animate-fade-in`}>
+    <div
+      className={`flex gap-2.5 py-2.5 ${isLast ? '' : 'border-b border-base-200/30'} animate-fade-in`}
+    >
       <div className="pt-0.5">{avatarContent}</div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className={`text-xs font-semibold ${
-            isJules ? 'text-primary' : isBot ? 'text-info/60' : 'text-secondary'
-          }`}>
+          <span
+            className={`text-xs font-semibold ${
+              isJules ? 'text-primary' : isBot ? 'text-info/60' : 'text-secondary'
+            }`}
+          >
             {isJules ? 'Jules' : comment.author || 'Unknown'}
           </span>
           {isJules && (
@@ -186,15 +225,22 @@ const MessageBubble: React.FC<{ comment: PRComment; isLast: boolean }> = ({ comm
               <Sparkles size={7} /> AI
             </span>
           )}
-          <span className="text-[10px] text-base-content/25 ml-auto tabular-nums" title={comment.created_at}>
+          <span
+            className="text-[10px] text-base-content/25 ml-auto tabular-nums"
+            title={comment.created_at}
+          >
             {formatTimestamp(comment.created_at)}
           </span>
         </div>
-        <div className={`rounded-xl px-3.5 py-2.5 text-base-content/80 ${
-          isJules ? 'bg-primary/5 border border-primary/10' :
-          isBot ? 'bg-base-200/30 border border-base-200/40' :
-          'bg-secondary/5 border border-secondary/10'
-        }`}>
+        <div
+          className={`rounded-xl px-3.5 py-2.5 text-base-content/80 ${
+            isJules
+              ? 'bg-primary/5 border border-primary/10'
+              : isBot
+                ? 'bg-base-200/30 border border-base-200/40'
+                : 'bg-secondary/5 border border-secondary/10'
+          }`}
+        >
           {renderBody(body)}
         </div>
       </div>
@@ -211,7 +257,10 @@ interface ConversationPanelProps {
 }
 
 export const ConversationPanel: React.FC<ConversationPanelProps> = ({
-  prNumber, repo, prUrl, agentBusy
+  prNumber,
+  repo,
+  prUrl,
+  agentBusy,
 }) => {
   const [comments, setComments] = useState<PRComment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -247,9 +296,9 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
     setLoading(true);
     try {
       const rows = await api.sqlQuery(
-        `SELECT * FROM jules_pr_comments WHERE pr_number = ${prNumber} AND repo = '${repo}' ORDER BY created_at ASC`
+        `SELECT * FROM jules_pr_comments WHERE pr_number = ${prNumber} AND repo = '${repo}' ORDER BY created_at ASC`,
       );
-      setComments(Array.isArray(rows) ? rows as unknown as PRComment[] : []);
+      setComments(Array.isArray(rows) ? (rows as unknown as PRComment[]) : []);
     } catch {
       setComments([]);
     }
@@ -262,11 +311,11 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
     try {
       // Fetch comments directly from GitHub via the connection tool
       const [owner, repoName] = repo.includes('/') ? repo.split('/') : ['guitarbeat', repo];
-      const result = await api.invokeTool({
+      const result = (await api.invokeTool({
         toolName: 'github_get_issue',
         connectionId: GITHUB_CONN,
-        args: { owner, repo: repoName, issue_number: prNumber }
-      }) as any;
+        args: { owner, repo: repoName, issue_number: prNumber },
+      })) as any;
 
       const ghComments: any[] = result?.comments || [];
       if (ghComments.length === 0) {
@@ -277,7 +326,7 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
 
       // Clear old entries for this PR
       await api.sqlExec(
-        `DELETE FROM jules_pr_comments WHERE pr_number = ${prNumber} AND repo = '${repo}'`
+        `DELETE FROM jules_pr_comments WHERE pr_number = ${prNumber} AND repo = '${repo}'`,
       );
 
       // Insert each comment
@@ -291,7 +340,7 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
 
         await api.sqlExec(
           `INSERT OR REPLACE INTO jules_pr_comments (pr_number, repo, github_comment_id, author, author_type, body, created_at, updated_at, fetched_at)
-           VALUES (${prNumber}, '${repo}', ${ghId}, '${author.replace(/'/g, "''")}', '${authorType}', '${body}', '${createdAt}', '${updatedAt}', datetime('now'))`
+           VALUES (${prNumber}, '${repo}', ${ghId}, '${author.replace(/'/g, "''")}', '${authorType}', '${body}', '${createdAt}', '${updatedAt}', datetime('now'))`,
         );
       }
 
@@ -318,9 +367,15 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
     }
   }, [comments.length]);
 
-  const julesCount = comments.filter(c => (c.author_type || classifyAuthor(c.author)) === 'jules').length;
-  const humanCount = comments.filter(c => (c.author_type || classifyAuthor(c.author)) === 'human').length;
-  const botCount = comments.filter(c => (c.author_type || classifyAuthor(c.author)) === 'bot').length;
+  const julesCount = comments.filter(
+    (c) => (c.author_type || classifyAuthor(c.author)) === 'jules',
+  ).length;
+  const humanCount = comments.filter(
+    (c) => (c.author_type || classifyAuthor(c.author)) === 'human',
+  ).length;
+  const botCount = comments.filter(
+    (c) => (c.author_type || classifyAuthor(c.author)) === 'bot',
+  ).length;
 
   return (
     <div className="border-t border-info/10">
@@ -343,15 +398,17 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
               )}
             </span>
           )}
-          {fetching && (
-            <span className="text-xs text-info ml-2 animate-pulse">fetching…</span>
-          )}
+          {fetching && <span className="text-xs text-info ml-2 animate-pulse">fetching…</span>}
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {comments.length === 0 && !loading && !fetching && (
             <span className="text-[10px] text-base-content/25 italic">No messages</span>
           )}
-          {expanded ? <ChevronUp size={14} className="text-base-content/30" /> : <ChevronDown size={14} className="text-base-content/30" />}
+          {expanded ? (
+            <ChevronUp size={14} className="text-base-content/30" />
+          ) : (
+            <ChevronDown size={14} className="text-base-content/30" />
+          )}
         </div>
       </button>
 
@@ -392,9 +449,9 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
           )}
 
           {/* Loading state */}
-          {(loading || (fetching && comments.length === 0)) ? (
+          {loading || (fetching && comments.length === 0) ? (
             <div className="flex flex-col gap-3 py-4">
-              {[1, 2, 3].map(i => (
+              {[1, 2, 3].map((i) => (
                 <div key={i} className="flex gap-2.5 animate-pulse">
                   <div className="w-7 h-7 rounded-full bg-base-200/40 shrink-0" />
                   <div className="flex-1 space-y-2">
@@ -413,10 +470,7 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
               </p>
             </div>
           ) : (
-            <div
-              ref={scrollRef}
-              className="max-h-[28rem] overflow-y-auto pr-1 custom-scrollbar"
-            >
+            <div ref={scrollRef} className="max-h-[28rem] overflow-y-auto pr-1 custom-scrollbar">
               {comments.map((c, i) => (
                 <MessageBubble key={c.id || i} comment={c} isLast={i === comments.length - 1} />
               ))}
@@ -437,7 +491,8 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
               </span>
               <span className="ml-auto flex items-center gap-1">
                 <Clock size={9} />
-                Last: {comments.length > 0 ? timeAgo(comments[comments.length - 1].created_at) : '—'}
+                Last:{' '}
+                {comments.length > 0 ? timeAgo(comments[comments.length - 1].created_at) : '—'}
               </span>
             </div>
           )}
