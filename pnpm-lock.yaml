@@ -21,8 +21,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/mcp-client
       lucide-react:
-        specifier: ^0.523.0
-        version: 0.523.0(react@19.3.0)
+        specifier: ^1.45.0
+        version: 1.45.0(react@19.3.0)
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -43,8 +43,8 @@ importers:
   apps/pr-dashboard:
     dependencies:
       lucide-react:
-        specifier: ^0.523.0
-        version: 0.523.0(react@19.3.0)
+        specifier: ^1.45.0
+        version: 1.45.0(react@19.3.0)
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -65,8 +65,8 @@ importers:
   apps/pr-health:
     dependencies:
       lucide-react:
-        specifier: ^0.523.0
-        version: 0.523.0(react@19.3.0)
+        specifier: ^1.45.0
+        version: 1.45.0(react@19.3.0)
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -103,8 +103,8 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  lucide-react@0.523.0:
-    resolution: {integrity: sha512-rUjQoy7egZT9XYVXBK1je9ckBnNp7qzRZOhLQx5RcEp2dCGlXo+mv6vf7Am4LimEcFBJIIZzSGfgTqc9QCrPSw==}
+  lucide-react@1.45.0:
+    resolution: {integrity: sha512-yH1ubCAduho9UR7oJhRXIQXogksRILBiTuZC4/bQIGeB9JOkxMlSuEHyyZpo1Z3S0yWJO2KTSUZbjiNvVxeOUw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -142,7 +142,7 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  lucide-react@0.523.0(react@19.3.0):
+  lucide-react@1.45.0(react@19.3.0):
     dependencies:
       react: 19.3.0
 
