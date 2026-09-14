@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@v11
         with:
           stale-issue-message: "This issue has had no activity for 45 days and was marked stale. Reply to keep it open."
           stale-pr-message: "This PR has had no activity for 30 days and was marked stale. Update it to keep it open."
